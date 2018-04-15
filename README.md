@@ -1,5 +1,7 @@
 # Correlation Tracking Playground
 
+![example](https://github.com/burningion/correlation-tracking-playground/raw/master/images/example.png)
+
 Playground for correlation tracking in dlib with Pygame
 
 This is a work in progress, and will go along with a blog post on doing correlation tracking in Python with dlib.
