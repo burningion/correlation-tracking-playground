@@ -2,6 +2,8 @@ import pygame
 import dlib
 from skimage import io
 
+import json
+
 pygame.init()
 screenWidth = 1920
 screenHeight = 1080
@@ -51,6 +53,16 @@ def get_next_frame(trackers, startFrame, nowFrame):
         tracker['end'] = [int(pos.right()), int(pos.bottom())]
     return trackers, nowFrame
 
+def save_trackers(trackers):
+    # delete tracker objects 
+    for tracker in trackers:
+        del tracker['tracker']
+
+    with open('out.json', 'w') as out:
+        json.dump(trackers, out, indent=4)
+    print('wrote trackers to disk')
+    return
+
 trackers = []
 
 while running:
@@ -80,4 +92,6 @@ while running:
         elif event.type == pygame.KEYUP and event.key == ord('n'):
             trackers, nowFrame = get_next_frame(trackers, startFrame, nowFrame)
             currentFrame = pygame.image.load(inputDirectory + '%05d.png' % nowFrame)
+        elif event.type == pygame.KEYUP and event.key == ord('s'):
+            save_trackers(trackers)
     pygame.display.flip()

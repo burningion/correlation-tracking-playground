@@ -1,0 +1,26 @@
+[
+    {
+        "start": [
+            421,
+            158
+        ],
+        "end": [
+            509,
+            236
+        ],
+        "startFrame": 199,
+        "endFrame": false
+    },
+    {
+        "start": [
+            282,
+            349
+        ],
+        "end": [
+            402,
+            448
+        ],
+        "startFrame": 252,
+        "endFrame": false
+    }
+]
