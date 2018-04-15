@@ -9,7 +9,9 @@ startFrame = 199
 nowFrame = 199
 
 # input directory is directory with image sequence
+# in this example it'd be ./bowl_in/00001.png through whatever
 inputDirectory = './bowl_in/'
+
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 red = (255, 0, 0)
@@ -22,19 +24,24 @@ selection_start = [0, 0]
 selection_end = [0, 0]
 
 def draw_rect(screen, color, start, end, width=1):
-    pygame.draw.rect(screen, color, (start[0], start[1], end[0] - start[0], end[1] - start[1]), width)
+    pygame.draw.rect(screen,
+                     color,
+                     (start[0], start[1], end[0] - start[0], end[1] - start[1]),
+                     width)
     return
 
+def get_tracker(nowFrame, start, end):
+    tracker = {'start': start, 'end': end, 'startFrame': nowFrame, 'endFrame': False}
+
+    img = io.imread(inputDirectory + '%05d.png' % nowFrame)
+    tracker['tracker'] = dlib.correlation_tracker()
+    tracker['tracker'].start_track(img, dlib.rectangle(tracker['start'][0],
+                                                       tracker['start'][1],
+                                                       tracker['end'][0],
+                                                       tracker['end'][1]))
+    return tracker
+
 def get_next_frame(trackers, startFrame, nowFrame):
-    # if same, we need to initialize trackers
-    if startFrame == nowFrame:
-        img = io.imread(inputDirectory + '%05d.png' % nowFrame)
-        for tracker in trackers:
-            tracker['tracker'] = dlib.correlation_tracker()
-            tracker['tracker'].start_track(img, dlib.rectangle(tracker['start'][0],
-                                tracker['start'][1],
-                                tracker['end'][0],
-                                tracker['end'][1]))
     nowFrame += 1
     img = io.imread(inputDirectory + '%05d.png' % nowFrame)
     for tracker in trackers:
@@ -67,7 +74,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if selecting:
                 selecting = False
-                trackers.append({'start': selection_start, 'end': selection_end})
+                trackers.append(get_tracker(nowFrame, selection_start, selection_end))
         elif event.type == pygame.KEYUP and event.key == ord('z'):
             trackers = trackers[:-1]
         elif event.type == pygame.KEYUP and event.key == ord('n'):
