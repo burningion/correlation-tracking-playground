@@ -12,8 +12,8 @@ args = parser.parse_args()
 pygame.init()
 screenWidth = 1920
 screenHeight = 1080
-startFrame = 293
-nowFrame = 293
+startFrame = 557
+nowFrame = 557
 
 # input directory is directory with image sequence
 # in this example it'd be ./bowl_in/00001.png through whatever
@@ -70,8 +70,6 @@ def get_next_frame(trackers, startFrame, nowFrame):
 
 def save_trackers(trackers):
     # delete tracker objects
-    # and current frame box
-
     for tracker in trackers:
         del tracker['tracker']
     with open('trackers.json', 'w') as out:
@@ -81,7 +79,11 @@ def save_trackers(trackers):
 
 def load_trackers(filename):
     with open(filename) as json_file:
-        return json.load(json_file)
+        trackers = json.load(json_file)
+        for tracker in trackers:
+            tracker['currentStart'] = tracker['start']
+            tracker['currentEnd'] = tracker['end']
+        return trackers
 
 if args.filename:
     trackers = load_trackers(args.filename)
